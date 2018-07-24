@@ -1,0 +1,134 @@
+#!/bin/bash
+
+# Author: Abenx <aben@abenx.com>
+
+SERVICES="nginx workspace mysql redis php-fpm"
+DIRNAME=$(pwd)
+PROJECTNAME=$(basename `pwd`)
+source ${DIRNAME}/scripts/simple_opts.sh
+
+cd dock
+
+function do_firstrun() {
+    cp env-example .env
+
+    docker pull happywork/nginx
+    docker pull happywork/php-fpm
+    docker pull happywork/workspace
+
+    do_start
+    do_init
+}
+
+function do_install() {
+    yum install -y docker
+    easy_install pip
+    pip install docker-compose
+
+    systemctl enable docker
+    systemctl start docker
+}
+
+function do_start() {
+    docker-compose up -d $SERVICES
+}
+
+function do_build() {
+    docker-compose build $SERVICES
+}
+
+function do_init() {
+    docker-compose exec workspace cp /var/www/laravel/.env.example /var/www/laravel/.env
+    docker-compose exec workspace composer --working-dir=/var/www/laravel install
+    docker-compose exec php-fpm chown -R www-data:www-data /var/www/laravel
+}
+
+function do_boost() {
+    docker-compose exec workspace php laravel/artisan config:cache
+    docker-compose exec workspace php laravel/artisan route:cache
+    docker-compose exec workspace php laravel/artisan optimize
+    docker-compose exec workspace composer --working-dir=/var/www/laravel dumpautoload
+}
+
+function do_stop() {
+    docker-compose down
+}
+
+function do_restart() {
+    do_stop
+    do_start
+}
+
+function do_bash() {
+    docker-compose exec workspace bash
+}
+
+function do_zsh() {
+    docker-compose exec workspace zsh
+}
+
+function help() {
+    cat <<-EOF
+A shell tool for server manager.
+
+Usage:
+    $0 [options] COMMAND
+
+Options:
+    -h --help               Show this help message and exit
+
+Commands:
+    install                 Install docker, docker-compose
+    firstrun                First run containers
+    start                   Create and start containers
+    stop                    Stop and remove containers, networks, images, and volumes
+    restart                 Recreate containers, networks, images, and volumes
+    build                   Build images
+    bash                    Opens bash on the workspace
+    zsh                     Opens zsh on the workspace
+    boost                   Make Laravel faster
+
+EOF
+}
+
+if [ $# == 0 ]; then
+    help && exit 0
+fi
+
+opt --help -h
+opt_parse $@
+
+case $1 in
+    install )
+        do_install && exit 0
+        ;;
+    firstrun )
+        do_firstrun && exit 0
+        ;;
+    start )
+        do_start && exit 0
+        ;;
+    stop )
+        do_stop && exit 0
+        ;;
+    restart )
+        do_restart && exit 0
+        ;;
+    build )
+        do_build && exit 0
+        ;;
+    bash )
+        do_bash && exit 0
+        ;;
+    zsh )
+        do_zsh && exit 0
+        ;;
+    boost )
+        do_boost && exit 0
+        ;;
+    * )
+        help && exit 0
+        ;;
+esac
+
+[ $help ] && help && exit 0
