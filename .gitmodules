@@ -1,0 +1,3 @@
+[submodule "src/workspace/Jobboard"]
+	path = src/workspace/Jobboard
+	url = https://github.com/rushairer/Jobboard
