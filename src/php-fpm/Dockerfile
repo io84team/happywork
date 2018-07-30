@@ -99,6 +99,7 @@ RUN if [ ${INSTALL_MYSQLI} = true ]; then \
 ARG INSTALL_INTL=true
 
 RUN if [ ${INSTALL_INTL} = true ]; then \
+    apt-get install -y zlib1g-dev libicu-dev g++ && \
     docker-php-ext-configure intl && \
     docker-php-ext-install intl \
 ;fi
