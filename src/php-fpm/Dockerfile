@@ -1,7 +1,9 @@
 FROM php:7.2-fpm-alpine
 MAINTAINER Aben <aben@abenx.com>
 
-RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+RUN set -xe \
+    && apk add --no-cache --virtual .build-deps \
+    $PHPIZE_DEPS \
     shadow \
     zlib-dev
 
@@ -101,6 +103,20 @@ RUN if [ ${INSTALL_INTL} = true ]; then \
     docker-php-ext-install intl \
 ;fi
 
+###########################################################################
+# GD:
+###########################################################################
+
+ARG INSTALL_GD=false
+
+RUN if [ ${INSTALL_GD} = true ]; then \
+    set -xe \
+    && apk add --no-cache libpng-dev libjpeg-turbo-dev freetype-dev \
+    && docker-php-ext-configure gd \
+    --with-jpeg-dir=/usr/include \
+    --with-freetype-dir=/usr/include/freetype2 \
+    && docker-php-ext-install gd fileinfo mbstring \
+;fi
 
 ###########################################################################
 # PDO Mysql:
