@@ -2,3 +2,4 @@ node_modules
 .yarn-cache/
 .DS_Store
 dock/.env
+apps/*
