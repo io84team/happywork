@@ -13,7 +13,7 @@ services:
             - frontend
             - backend
     php-fpm:
-        image: happywork/php-fpm:latest
+        image: happywork/php-fpm:full
         build:
             context: ../src/php-fpm
             args:
