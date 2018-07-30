@@ -1,7 +1,9 @@
 FROM php:7.2-fpm-alpine
 MAINTAINER Aben <aben@abenx.com>
 
-RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+RUN set -xe \
+    && apk add --no-cache --virtual .build-deps \
+    $PHPIZE_DEPS \
     shadow \
     zlib-dev
 
@@ -9,7 +11,7 @@ RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
 # xDebug:
 ###########################################################################
 
-ARG INSTALL_XDEBUG=false
+ARG INSTALL_XDEBUG=true
 
 RUN if [ ${INSTALL_XDEBUG} = true ]; then \
     # Install the xdebug extension
@@ -24,7 +26,7 @@ COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 # PHP REDIS EXTENSION
 ###########################################################################
 
-ARG INSTALL_PHPREDIS=false
+ARG INSTALL_PHPREDIS=true
 
 RUN if [ ${INSTALL_PHPREDIS} = true ]; then \
     # Install Php Redis Extension
@@ -37,7 +39,7 @@ RUN if [ ${INSTALL_PHPREDIS} = true ]; then \
 # MongoDB:
 ###########################################################################
 
-ARG INSTALL_MONGO=false
+ARG INSTALL_MONGO=true
 
 RUN if [ ${INSTALL_MONGO} = true ]; then \
     # Install the mongodb extension
@@ -49,7 +51,7 @@ RUN if [ ${INSTALL_MONGO} = true ]; then \
 # ZipArchive:
 ###########################################################################
 
-ARG INSTALL_ZIP_ARCHIVE=false
+ARG INSTALL_ZIP_ARCHIVE=true
 
 RUN if [ ${INSTALL_ZIP_ARCHIVE} = true ]; then \
     # Install the zip extension
@@ -60,7 +62,7 @@ RUN if [ ${INSTALL_ZIP_ARCHIVE} = true ]; then \
 # Exif:
 ###########################################################################
 
-ARG INSTALL_EXIF=false
+ARG INSTALL_EXIF=true
 
 RUN if [ ${INSTALL_EXIF} = true ]; then \
     # Enable Exif PHP extentions requirements
@@ -71,7 +73,7 @@ RUN if [ ${INSTALL_EXIF} = true ]; then \
 # Opcache:
 ###########################################################################
 
-ARG INSTALL_OPCACHE=false
+ARG INSTALL_OPCACHE=true
 
 RUN if [ ${INSTALL_OPCACHE} = true ]; then \
     docker-php-ext-install opcache \
@@ -84,7 +86,7 @@ COPY ./opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 # Mysqli Modifications:
 ###########################################################################
 
-ARG INSTALL_MYSQLI=false
+ARG INSTALL_MYSQLI=true
 
 RUN if [ ${INSTALL_MYSQLI} = true ]; then \
     docker-php-ext-install mysqli \
@@ -94,13 +96,28 @@ RUN if [ ${INSTALL_MYSQLI} = true ]; then \
 # Human Language and Character Encoding Support:
 ###########################################################################
 
-ARG INSTALL_INTL=false
+ARG INSTALL_INTL=true
 
 RUN if [ ${INSTALL_INTL} = true ]; then \
+    apk add --no-cache g++ zlib-dev icu-dev && \
     docker-php-ext-configure intl && \
     docker-php-ext-install intl \
 ;fi
 
+###########################################################################
+# GD:
+###########################################################################
+
+ARG INSTALL_GD=true
+
+RUN if [ ${INSTALL_GD} = true ]; then \
+    set -xe \
+    && apk add --no-cache libpng-dev libjpeg-turbo-dev freetype-dev \
+    && docker-php-ext-configure gd \
+    --with-jpeg-dir=/usr/include \
+    --with-freetype-dir=/usr/include/freetype2 \
+    && docker-php-ext-install gd fileinfo mbstring \
+;fi
 
 ###########################################################################
 # PDO Mysql:
