@@ -127,6 +127,7 @@ ARG INSTALL_MCRYPT=true
 
 RUN if [ ${INSTALL_MCRYPT} = true ]; then \
     set -xe \
+    && apk add --no-cache libmcrypt-dev \
     && yes  "" | pecl install mcrypt-1.0.1 \
     && docker-php-ext-enable mcrypt \
 ;fi
