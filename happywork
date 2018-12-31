@@ -2,7 +2,7 @@
 
 # Author: Abenx <aben@abenx.com>
 
-SERVICES="nginx workspace mysql redis php-fpm"
+SERVICES="nginx workspace mysql redis php-fpm php-worker"
 DIRNAME=$(pwd)
 PROJECTNAME=$(basename `pwd`)
 source ${DIRNAME}/scripts/simple_opts.sh
