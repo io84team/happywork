@@ -5,7 +5,8 @@ RUN set -xe \
     && apk add --no-cache --virtual .build-deps \
     $PHPIZE_DEPS \
     shadow \
-    zlib-dev
+    zlib-dev \
+    supervisor
 
 ###########################################################################
 # PHP REDIS EXTENSION
