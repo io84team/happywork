@@ -55,19 +55,6 @@ RUN if [ ${INSTALL_EXIF} = true ]; then \
 ;fi
 
 ###########################################################################
-# Opcache:
-###########################################################################
-
-ARG INSTALL_OPCACHE=true
-
-RUN if [ ${INSTALL_OPCACHE} = true ]; then \
-    docker-php-ext-install opcache \
-;fi
-
-# Copy opcache configration
-COPY ./opcache.ini /usr/local/etc/php/conf.d/opcache.ini
-
-###########################################################################
 # Mysqli Modifications:
 ###########################################################################
 
