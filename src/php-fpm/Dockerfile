@@ -11,7 +11,7 @@ RUN set -xe \
 # xDebug:
 ###########################################################################
 
-ARG INSTALL_XDEBUG=true
+ARG INSTALL_XDEBUG=false
 
 RUN if [ ${INSTALL_XDEBUG} = true ]; then \
     # Install the xdebug extension
@@ -39,7 +39,7 @@ RUN if [ ${INSTALL_PHPREDIS} = true ]; then \
 # MongoDB:
 ###########################################################################
 
-ARG INSTALL_MONGO=true
+ARG INSTALL_MONGO=false
 
 RUN if [ ${INSTALL_MONGO} = true ]; then \
     # Install the mongodb extension
@@ -62,7 +62,7 @@ RUN if [ ${INSTALL_ZIP_ARCHIVE} = true ]; then \
 # Exif:
 ###########################################################################
 
-ARG INSTALL_EXIF=true
+ARG INSTALL_EXIF=false
 
 RUN if [ ${INSTALL_EXIF} = true ]; then \
     # Enable Exif PHP extentions requirements
