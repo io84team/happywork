@@ -15,6 +15,7 @@ function do_firstrun() {
     docker pull happywork/nginx
     docker pull happywork/php-fpm
     docker pull happywork/workspace
+    docker pull happywork/php-worker
 
     do_start
     do_init
