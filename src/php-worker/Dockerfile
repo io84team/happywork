@@ -87,7 +87,7 @@ ARG INSTALL_GD=true
 
 RUN if [ ${INSTALL_GD} = true ]; then \
     set -xe \
-    && apk add --no-cache libpng-dev libjpeg-turbo-dev freetype-dev \
+    && apk add --no-cache libpng-dev libjpeg-turbo-dev freetype-dev oniguruma-dev \
     && docker-php-ext-configure gd \
     --with-jpeg \
     --with-freetype \
