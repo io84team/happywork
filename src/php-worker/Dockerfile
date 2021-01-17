@@ -40,6 +40,8 @@ RUN if [ ${INSTALL_MONGO} = true ]; then \
 ARG INSTALL_ZIP_ARCHIVE=true
 
 RUN if [ ${INSTALL_ZIP_ARCHIVE} = true ]; then \
+    apk add --no-cache libzip-dev && \
+    docker-php-ext-configure zip --with-zip && \
     # Install the zip extension
     docker-php-ext-install zip \
 ;fi
