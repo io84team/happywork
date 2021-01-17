@@ -1,4 +1,4 @@
-FROM php:7.2-alpine
+FROM php:8.0.1-alpine
 MAINTAINER Aben <aben@abenx.com>
 
 RUN set -xe \
@@ -101,7 +101,7 @@ ARG INSTALL_MCRYPT=true
 RUN if [ ${INSTALL_MCRYPT} = true ]; then \
     set -xe \
     && apk add --no-cache libmcrypt-dev \
-    && yes  "" | pecl install mcrypt-1.0.1 \
+    && yes  "" | pecl install mcrypt-1.0.4 \
     && docker-php-ext-enable mcrypt \
 ;fi
 
