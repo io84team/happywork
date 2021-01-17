@@ -116,8 +116,8 @@ RUN if [ ${INSTALL_GD} = true ]; then \
     set -xe \
     && apk add --no-cache libpng-dev libjpeg-turbo-dev freetype-dev \
     && docker-php-ext-configure gd \
-    --with-jpeg-dir=/usr/include \
-    --with-freetype-dir=/usr/include/freetype2 \
+    --with-jpeg \
+    --with-freetype \
     && docker-php-ext-install gd fileinfo mbstring \
 ;fi
 
