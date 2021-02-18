@@ -1,4 +1,4 @@
-FROM php:7.2-alpine
+FROM php:7-alpine
 MAINTAINER Aben <aben@abenx.com>
 
 RUN set -xe \
@@ -40,6 +40,8 @@ RUN if [ ${INSTALL_MONGO} = true ]; then \
 ARG INSTALL_ZIP_ARCHIVE=true
 
 RUN if [ ${INSTALL_ZIP_ARCHIVE} = true ]; then \
+    apk add --no-cache libzip-dev && \
+    docker-php-ext-configure zip --with-zip && \
     # Install the zip extension
     docker-php-ext-install zip \
 ;fi
@@ -85,10 +87,10 @@ ARG INSTALL_GD=true
 
 RUN if [ ${INSTALL_GD} = true ]; then \
     set -xe \
-    && apk add --no-cache libpng-dev libjpeg-turbo-dev freetype-dev \
+    && apk add --no-cache libpng-dev libjpeg-turbo-dev freetype-dev oniguruma-dev \
     && docker-php-ext-configure gd \
-    --with-jpeg-dir=/usr/include \
-    --with-freetype-dir=/usr/include/freetype2 \
+    --with-jpeg \
+    --with-freetype \
     && docker-php-ext-install gd fileinfo mbstring \
 ;fi
 
@@ -101,7 +103,7 @@ ARG INSTALL_MCRYPT=true
 RUN if [ ${INSTALL_MCRYPT} = true ]; then \
     set -xe \
     && apk add --no-cache libmcrypt-dev \
-    && yes  "" | pecl install mcrypt-1.0.1 \
+    && yes  "" | pecl install mcrypt-1.0.4 \
     && docker-php-ext-enable mcrypt \
 ;fi
 
