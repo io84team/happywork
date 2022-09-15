@@ -125,7 +125,7 @@ RUN if [ ${INSTALL_GD} = true ]; then \
 # Mcrypt:
 ###########################################################################
 
-ARG INSTALL_MCRYPT=true
+ARG INSTALL_MCRYPT=false
 
 RUN if [ ${INSTALL_MCRYPT} = true ]; then \
     set -xe \
